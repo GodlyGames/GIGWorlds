@@ -2,7 +2,7 @@
 	"FileVersion": 3,
 	"EngineAssociation": "4.26",
 	"Category": "",
-	"Description": "",
+	"Description": "DESCRIPTION",
 	"Modules": [
 		{
 			"Name": "GIGWorlds",
