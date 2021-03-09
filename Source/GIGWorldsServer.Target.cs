@@ -9,7 +9,8 @@ public class GIGWorldsServerTarget : TargetRules
     public GIGWorldsServerTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Server;
-		BuildEnvironment = TargetBuildEnvironment.Shared;
+		//BuildEnvironment = TargetBuildEnvironment.Shared;
+		DefaultBuildSettings = BuildSettingsVersion.V2;
 		ExtraModuleNames.Add("GIGWorlds");
 	}
 }
