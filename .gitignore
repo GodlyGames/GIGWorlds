@@ -16,3 +16,23 @@ Build/WindowsNoEditor/FileOpenOrder/EditorOpenOrder.log
 Build/WindowsNoEditor/FileOpenOrder/CookerOpenOrder.log
 Build/WindowsServer/FileOpenOrder/CookerOpenOrder.log
 *.log
+
+# Linux Generated Project Files
+.idea
+.kdev4
+cmake-build-debug
+CMakeLists.txt
+.ignore
+GIGWorlds.code-workspace
+GIGWorlds.kdev4
+GIGWorlds.pro
+GIGWorlds.workspace
+GIGWorldsCodeCompletionFolders.txt
+GIGWorldsCodeLitePreProcessor.txt
+GIGWorldsConfig.pri
+GIGWorldsDefines.pri
+GIGWorldsHeader.pri
+GIGWorldsIncludes.pri
+GIGWorldsSource.pri
+Makefile
+
