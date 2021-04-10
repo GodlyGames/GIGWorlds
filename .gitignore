@@ -37,3 +37,11 @@ GIGWorldsSource.pri
 Makefile
 
 Content/UltraDynamicSky/Textures/Sky/Real_Stars.uasset
+Build/WindowsNoEditor/Engine/Extras/Redist/en-us/UE4PrereqSetup_x64.exe
+Build/WindowsNoEditor/GGTAG.exe
+Build/WindowsNoEditor/GIGWorlds/Content/Paks/GIGWorlds-WindowsNoEditor.pak
+Build/WindowsNoEditor/TAGv1.8.2.5.zip
+Build/WindowsServer/Engine/Extras/Redist/en-us/UE4PrereqSetup_x64.exe
+Build/WindowsServer/GIGWorlds/Content/Paks/GIGWorlds-WindowsServer.pak
+Build/WindowsServer/GIGWorldsServer.exe
+Build/WindowsServer/Manifest_NonUFSFiles_Win64.txt
