@@ -99,7 +99,9 @@ public:
 	TArray<uint8> bufferEncodedOpus;	
 	TArray<uint8> bufferRPCdecodedData;
 
-	
+	TArray<uint8> bufferedAudioToPlay;
+	float timeBuffering = 0;
+	bool useBufferedAudio = true;
 
 #if PLATFORM_WINDOWS
 	// PC

@@ -170,6 +170,18 @@ void UMicrophoneSpeakComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 
 	if (VoiceCaptureAudioComponent == NULL || VoiceCaptureSoundWaveProcedural == NULL || !VoiceCaptureAudioComponent->IsRegistered()) return;
 	
+	if (GetNetMode() != NM_DedicatedServer) {
+		if (useBufferedAudio) {
+			if (bufferedAudioToPlay.Num() > 2 * 1920 * 12) {
+				int sampleToPlay = 2 * 2 * 1920;
+				VoiceCaptureSoundWaveProcedural->QueueAudio(bufferedAudioToPlay.GetData(), sampleToPlay);
+				bufferedAudioToPlay.RemoveAt(0, sampleToPlay, false);				
+				UE_LOG(LogTemp, Warning, TEXT("play buffered audio remain %d"), bufferedAudioToPlay.Num());
+			}			
+		}
+	}
+	
+
 	// only capture if this component is from local voice chat actor
 	if (GetNetMode() != NM_DedicatedServer && UUniversalVoiceChat::GetMyPlayerVoiceActor() != NULL && UUniversalVoiceChat::GetMyPlayerVoiceActor() == (AActor*)GetOwner()){
 	
@@ -259,9 +271,14 @@ void UMicrophoneSpeakComponent::SetVoiceVolume(float volume) {
 }
 
 void UMicrophoneSpeakComponent::setAttenuationAssetPath(bool enableAttenuation, FString _pathToAttenuationAsset) {
+
+	UE_LOG(LogTemp, Warning, TEXT("APlayerVoiceChatActor::setAttenuationAssetPath %d %s"), enableAttenuation, *_pathToAttenuationAsset);
+
+
 	pathToAttenuationAsset = _pathToAttenuationAsset;
 	attenuationIsEnabled = enableAttenuation;
 
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("UMicrophoneSpeakComponent::setAttenuationAssetPath %d %s"), (int)enableAttenuation, *_pathToAttenuationAsset));
 
 	USoundAttenuation *soundAttenuationAsset = NULL;
 	
@@ -269,12 +286,14 @@ void UMicrophoneSpeakComponent::setAttenuationAssetPath(bool enableAttenuation, 
 		soundAttenuationAsset = LoadObject<USoundAttenuation>(NULL, *pathToAttenuationAsset, NULL, LOAD_None, NULL);
 		if (soundAttenuationAsset == NULL) {
 			UE_LOG(LogTemp, Warning, TEXT("UMicrophoneSpeakComponent::setAttenuationAssetPath error null %s"), *pathToAttenuationAsset);
+			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("UMicrophoneSpeakComponent::setAttenuationAssetPath error null %s"), *GetName()));
 		}
 	}
 
 	if (VoiceCaptureAudioComponent != NULL && VoiceCaptureSoundWaveProcedural != NULL) {
 		if (enableAttenuation && soundAttenuationAsset) {
 			if (!pathToAttenuationAsset.IsEmpty()) {
+				//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("UMicrophoneSpeakComponent::setAttenuationAssetPath enable attenuation %s"), *pathToAttenuationAsset));
 				UE_LOG(LogTemp, Warning, TEXT("UMicrophoneSpeakComponent::setAttenuationAssetPath enable attenuation %s"), *pathToAttenuationAsset);
 			}
 			VoiceCaptureAudioComponent->bOverrideAttenuation = false;
@@ -282,6 +301,8 @@ void UMicrophoneSpeakComponent::setAttenuationAssetPath(bool enableAttenuation, 
 			VoiceCaptureAudioComponent->bAllowSpatialization = true;			
 		}
 		else {
+			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("UMicrophoneSpeakComponent::setAttenuationAssetPath disable attenuation")));
+
 			UE_LOG(LogTemp, Warning, TEXT("UMicrophoneSpeakComponent::setAttenuationAssetPath disable attenuation"));
 			VoiceCaptureAudioComponent->bOverrideAttenuation = false;
 			VoiceCaptureAudioComponent->AttenuationSettings = nullptr;
@@ -289,7 +310,8 @@ void UMicrophoneSpeakComponent::setAttenuationAssetPath(bool enableAttenuation, 
 		}
 	}
 	else{
-		UE_LOG(LogTemp, Warning, TEXT("UMicrophoneSpeakComponent::setAttenuationAssetPath null audio comp"));
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("UMicrophoneSpeakComponent::setAttenuationAssetPath disable attenuation")));
+		UE_LOG(LogTemp, Warning, TEXT("UMicrophoneSpeakComponent::setAttenuationAssetPath disable attenuation"));
 	}
 
 }
@@ -524,7 +546,13 @@ void UMicrophoneSpeakComponent::payloadReceivedVoiceData(TArray<uint8> const &da
 	
 	// only play audio if not muted
 	if (!isMutedLocalSetting && VoiceCaptureSoundWaveProcedural != NULL) {
-		VoiceCaptureSoundWaveProcedural->QueueAudio(bufferRPCdecodedData.GetData(), outsize);
+		
+		if (useBufferedAudio) {
+			bufferedAudioToPlay.Append(bufferRPCdecodedData.GetData(), outsize);
+		}		
+		else {
+			VoiceCaptureSoundWaveProcedural->QueueAudio(bufferRPCdecodedData.GetData(), outsize);
+		}		
 	}
 }
 

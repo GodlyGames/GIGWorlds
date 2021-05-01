@@ -54,6 +54,18 @@ void APlayerVoiceChatActor::BeginPlay() {
 		}
 
 		
+		if (this->microphoneSpeakComponent) {
+			UE_LOG(LogTemp, Warning, TEXT("APlayerVoiceChatActor BeginPlay try set attenuation"));
+			if (!pathToAttenuationAsset.IsEmpty()) {
+				this->microphoneSpeakComponent->setAttenuationAssetPath(true, pathToAttenuationAsset);
+			}
+			else {
+				this->microphoneSpeakComponent->setAttenuationAssetPath(false, pathToAttenuationAsset);
+			}
+		}
+		else {
+			UE_LOG(LogTemp, Warning, TEXT("APlayerVoiceChatActor BeginPlay try set attenuation his->microphoneSpeakComponent null"));
+		}
 
 		FScriptDelegate Delegate;
 		Delegate.BindUFunction(this, "DelegateEndPlayOwner");
@@ -104,6 +116,8 @@ void APlayerVoiceChatActor::GetLifetimeReplicatedProps(TArray< FLifetimeProperty
 }
 
 void APlayerVoiceChatActor::RepNotifyMicComp() {
+
+	UE_LOG(LogTemp, Warning, TEXT("APlayerVoiceChatActor::RepNotifyMicComp"));
 	if (this->microphoneSpeakComponent) {
 		if (!pathToAttenuationAsset.IsEmpty()) {
 			this->microphoneSpeakComponent->setAttenuationAssetPath(true, pathToAttenuationAsset);
@@ -119,10 +133,12 @@ void APlayerVoiceChatActor::RepNotifyMicComp() {
 
 void APlayerVoiceChatActor::RepNotifyAttenuationAsset() {
 	
-	
+	UE_LOG(LogTemp, Warning, TEXT("APlayerVoiceChatActor::RepNotifyAttenuationAsset"));
 	//if (!pathToAttenuationAsset.IsEmpty()) {
 	//	UE_LOG(LogTemp, Warning, TEXT("APlayerVoiceChatActor RepNotifyAttenuationAsset server ? %d %s"), GetWorld()->IsServer(), *pathToAttenuationAsset);
 	//}
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("RepNotifyAttenuationAsset %s empty? %d"), *GetName(), pathToAttenuationAsset.IsEmpty()));
 
 	if (this->microphoneSpeakComponent) {
 		if (!pathToAttenuationAsset.IsEmpty()) {
