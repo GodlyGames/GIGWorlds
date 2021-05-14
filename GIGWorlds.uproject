@@ -32,13 +32,16 @@
 			"Enabled": true
 		},
 		{
-			"Name": "PowerIK",
-			"Enabled": false,
-			"MarketplaceURL": "https://www.unrealengine.com/marketplace/en-US/product/power-ik"
-		},
-		{
 			"Name": "ModelingToolsEditorMode",
 			"Enabled": true
+		},
+		{
+			"Name": "PowerIK",
+			"Enabled": true,
+			"MarketplaceURL": "https://www.unrealengine.com/marketplace/en-US/product/power-ik"
 		}
+	],
+	"TargetPlatforms": [
+		"WindowsNoEditor"
 	]
 }
