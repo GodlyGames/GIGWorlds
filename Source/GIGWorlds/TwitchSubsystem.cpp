@@ -104,7 +104,6 @@ void UTwitchSubsystem::SocketListener()
 	}
 }
 
-
 bool UTwitchSubsystem::SendString(const FString msg) const
 {
 	FString serialized = msg + TEXT("\r\n");
@@ -114,7 +113,6 @@ bool UTwitchSubsystem::SendString(const FString msg) const
 
 	return StreamerListenerSocket->Send((uint8*)TCHAR_TO_UTF8(serializedChar), size, sent);
 }
-
 
 void UTwitchSubsystem::ParseMessage(FString TwitchResponse)
 {
